@@ -1,0 +1,17 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Catálogo</title><style>
+:root{font-family:system-ui,sans-serif;color-scheme:dark}body{margin:0;background:#0d1117;color:#eee}.top{position:sticky;top:0;background:#0d1117ee;padding:18px;border-bottom:1px solid #2b313a;z-index:2}
+h1{margin:0 0 12px;font-size:24px}.meta{color:#9aa4b2;font-size:13px;margin:8px 0}input{width:100%;box-sizing:border-box;padding:14px;border-radius:12px;border:1px solid #343b45;background:#161b22;color:white;font-size:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;padding:16px}.card{background:#161b22;border:1px solid #2b313a;border-radius:16px;overflow:hidden}.pic{height:170px;background:#fff;display:grid;place-items:center;color:#555}.pic img{width:100%;height:100%;object-fit:contain}.body{padding:13px}.code{font-size:12px;color:#9aa4b2}.name{font-weight:700;margin:5px 0;min-height:42px}.price{font-size:19px;font-weight:800}.stock{font-size:13px;margin-top:6px}.dept{font-size:12px;color:#9aa4b2;margin-top:6px}.placeholder{padding:25px;text-align:center}
+</style></head><body><div class="top"><h1>🛒 Catálogo</h1><input id="q" placeholder="Buscar por nombre, código o departamento…"><div class="meta" id="meta"></div></div><main class="grid" id="grid"></main>
+<script>
+let all=[]; const grid=document.querySelector('#grid'), q=document.querySelector('#q'), meta=document.querySelector('#meta');
+const money=n=>new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN'}).format(n||0);
+function render(){
+ const s=q.value.trim().toLowerCase();
+ const list=all.filter(p=>(p.codigo+' '+p.producto+' '+p.departamento).toLowerCase().includes(s));
+ meta.textContent=`${list.length.toLocaleString('es-MX')} productos · catálogo provisional 17/09/2026`;
+ grid.innerHTML=list.slice(0,300).map(p=>`<article class="card"><div class="pic">${p.image_url?`<img loading="lazy" src="${p.image_url}">`:`<div class="placeholder">📦<br>Foto pendiente</div>`}</div><div class="body"><div class="code">Código ${p.codigo||'—'}</div><div class="name">${p.producto||'Producto sin nombre'}</div><div class="price">${money(p.precio_venta)}</div><div class="stock">Existencia: <b>${p.existencia}</b></div><div class="dept">${p.departamento||''}</div></div></article>`).join('');
+}
+fetch('catalogo.json').then(r=>r.json()).then(x=>{all=x;render()}); q.addEventListener('input',render);
+</script></body></html>

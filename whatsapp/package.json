@@ -1,0 +1,14 @@
+{
+  "name": "eleventa-whatsapp-personal",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node whatsapp.js"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "latest",
+    "better-sqlite3": "latest",
+    "pino": "latest",
+    "qrcode-terminal": "latest"
+  }
+}
