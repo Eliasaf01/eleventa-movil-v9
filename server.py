@@ -67,7 +67,6 @@ def init_db():
                             producto=EXCLUDED.producto,
                             p_venta=EXCLUDED.p_venta,
                             p_mayoreo=EXCLUDED.p_mayoreo,
-                            existencia=EXCLUDED.existencia,
                             departamento=EXCLUDED.departamento,
                             foto_url=EXCLUDED.foto_url,
                             actualizado=CURRENT_TIMESTAMP
