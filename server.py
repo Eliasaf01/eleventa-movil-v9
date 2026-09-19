@@ -2,7 +2,7 @@ import os
 import sqlite3
 import psycopg
 from psycopg.rows import dict_row
-from flask import Flask, jsonify, request, send_from_directory
+from flask import send_from_directory, Flask, jsonify, request, send_from_directory
 
 BASE = os.path.dirname(__file__)
 SQLITE_DB = os.path.join(BASE, "data", "catalogo.sqlite3")
