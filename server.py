@@ -92,6 +92,10 @@ def home():
     return send_from_directory("public", "index.html")
 
 
+@app.get("/images/<path:filename>")
+def images(filename):
+    return send_from_directory("public/images", filename)
+
 @app.get("/catalogo.json")
 def catalogo_json():
     with pg() as c:
