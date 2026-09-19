@@ -63,18 +63,25 @@ def init_db():
                          existencia, inv_minimo, inv_maximo, departamento,
                          foto_url)
                         VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-                        ON CONFLICT (codigo) DO NOTHING
+                        ON CONFLICT (codigo) DO UPDATE SET
+                            producto=EXCLUDED.producto,
+                            p_venta=EXCLUDED.p_venta,
+                            p_mayoreo=EXCLUDED.p_mayoreo,
+                            existencia=EXCLUDED.existencia,
+                            departamento=EXCLUDED.departamento,
+                            foto_url=EXCLUDED.foto_url,
+                            actualizado=CURRENT_TIMESTAMP
                     """, (
                         str(d.get("codigo", "")),
                         d.get("producto"),
                         d.get("p_costo", 0) or 0,
-                        d.get("p_venta", 0) or 0,
-                        d.get("p_mayoreo", 0) or 0,
+                        d.get("precio_venta", 0) or 0,
+                        d.get("precio_mayoreo", 0) or 0,
                         d.get("existencia", 0) or 0,
                         d.get("inv_minimo", 0) or 0,
                         d.get("inv_maximo", 0) or 0,
                         d.get("departamento"),
-                        d.get("foto_url")
+                        d.get("image_url")
                     ))
 
             s.close()
