@@ -48,7 +48,7 @@ def init_db():
             cur.execute("SELECT COUNT(*) AS n FROM products")
             empty = cur.fetchone()["n"] == 0
 
-        if empty and os.path.exists(SQLITE_DB):
+        if os.path.exists(SQLITE_DB):
             s = sqlite3.connect(SQLITE_DB)
             s.row_factory = sqlite3.Row
             rows = s.execute("SELECT * FROM products").fetchall()
