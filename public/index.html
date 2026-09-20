@@ -20,7 +20,7 @@ p.codigo==='ATOMINI'
 : p.foto_url
   ? `<img loading="lazy" src="${p.foto_url}">`
   : `<div class="placeholder">📦<br>Foto pendiente</div>`
-}</div><div class="body"><div class="code">Código ${p.codigo||'—'}</div><div class="name">${p.producto||'Producto sin nombre'}</div><div class="price">${money(p.precio_venta)}</div><div class="stock">Existencia: <b>${p.existencia}</b></div><div class="dept">${p.departamento||''}</div></div></article>`).join('');
+}</div><div class="body"><div class="code">Código ${p.codigo||'—'}</div><div class="name">${p.producto||'Producto sin nombre'}</div><div class="price">${money(p.p_venta)}</div><div class="stock">Existencia: <b>${p.existencia}</b></div><div class="dept">${p.departamento||''}</div></div></article>`).join('');
 }
 fetch('catalogo.json').then(r=>r.json()).then(x=>{all=x;render()}); q.addEventListener('input',render);
 </script></body></html>
