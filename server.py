@@ -1,7 +1,11 @@
 import os
 import sqlite3
-import psycopg
-from psycopg.rows import dict_row
+try:
+    import psycopg
+    from psycopg.rows import dict_row
+except ImportError:
+    psycopg = None
+    dict_row = None
 from flask import send_from_directory, Flask, jsonify, request, send_from_directory
 
 BASE = os.path.dirname(__file__)
@@ -12,7 +16,11 @@ app = Flask(__name__, static_folder="public")
 
 
 def pg():
-    return psycopg.connect(DATABASE_URL, row_factory=dict_row)
+    if DATABASE_URL:
+        return psycopg.connect(DATABASE_URL, row_factory=dict_row)
+    con = sqlite3.connect(SQLITE_DB)
+    con.row_factory = sqlite3.Row
+    return con
 
 
 def init_db():
@@ -98,9 +106,14 @@ def images(filename):
 @app.get("/catalogo.json")
 def catalogo_json():
     with pg() as c:
-        with c.cursor() as cur:
-            cur.execute("SELECT * FROM products ORDER BY producto, codigo")
-            return jsonify(cur.fetchall())
+        cur = c.cursor()
+        cur.execute("SELECT * FROM products ORDER BY producto, codigo")
+        rows = cur.fetchall()
+
+        if DATABASE_URL:
+            return jsonify(rows)
+
+        return jsonify([dict(row) for row in rows])
 
 
 @app.get("/api/search")
@@ -118,7 +131,14 @@ def search():
                 LIMIT 25
             """, (f"%{q}%", f"%{q}%", f"%{q}%"))
 
-            return jsonify(cur.fetchall())
+            rows = cur.fetchall()
+        if not DATABASE_URL:
+            rows = [dict(r) for r in rows]
+            for r in rows:
+                r["p_venta"] = r.get("precio_venta", 0)
+                r["p_mayoreo"] = r.get("precio_mayoreo", 0)
+                r["foto_url"] = r.get("image_url", "")
+        return jsonify(rows)
 
 
 @app.post("/api/sync")
