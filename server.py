@@ -113,7 +113,12 @@ def catalogo_json():
         if DATABASE_URL:
             return jsonify(rows)
 
-        return jsonify([dict(row) for row in rows])
+        data = [dict(row) for row in rows]
+    for r in data:
+        r["p_venta"] = r.get("precio_venta", 0)
+        r["p_mayoreo"] = r.get("precio_mayoreo", 0)
+        r["foto_url"] = r.get("image_url", "")
+    return jsonify(data)
 
 
 @app.get("/api/search")
@@ -137,6 +142,7 @@ def search():
             for r in rows:
                 r["p_venta"] = r.get("precio_venta", 0)
                 r["p_mayoreo"] = r.get("precio_mayoreo", 0)
+                r["foto_url"] = r.get("image_url", "")
                 r["foto_url"] = r.get("image_url", "")
         return jsonify(rows)
 
